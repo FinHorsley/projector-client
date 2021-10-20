@@ -22,6 +22,7 @@ jobs:
         run: gradle clean
       - name: Run Tests
         run: |
+          sudo apt-get install numlockx xdotool
           export CHROME_BIN=/$(which chromium)
           export DISPLAY=:99.0
           Xvfb -ac :99 -screen 0 1920x1080x16 &
