@@ -340,12 +340,13 @@ class LowLevelKeyboardTest {
   @EnabledOnOs(OS.LINUX)
   fun testNumpadEnterLinux() = test("\n") {
     Runtime.getRuntime().exec("xdotool key KP_Enter").waitFor()
+    keyPress(KeyEvent.VK_ENTER)
   }
 
   @Test
   @EnabledOnOs(OS.LINUX)
   fun testNumpadWithNumLockLinux() = test("5") {
-    Runtime.getRuntime().exec("numlockx on").waitFor()
+    //Runtime.getRuntime().exec("numlockx on").waitFor()
     keyPress(KeyEvent.VK_NUMPAD5)
     keyRelease(KeyEvent.VK_NUMPAD5)
   }
