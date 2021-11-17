@@ -27,11 +27,10 @@ import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.project.Project
 import javassist.CtClass
 import org.jetbrains.projector.agent.common.getDeclaredMethod
-import org.jetbrains.projector.agent.common.transformation.TransformerSetupBase
 
-internal object IjBrowserUtilTransformer : TransformerSetupBase<IjInjector.AgentParameters>() {
+internal object IjBrowserUtilTransformer : IdeaTransformerSetup<IjInjector.AgentParameters>() {
 
-  override val classTransformations: Map<Class<*>, (CtClass) -> ByteArray?> = mapOf(
+  override fun getTransformations(): Map<Class<*>, (CtClass) -> ByteArray?> = mapOf(
     BrowserUtil::class.java to ::transformBrowserUtil,
   )
 

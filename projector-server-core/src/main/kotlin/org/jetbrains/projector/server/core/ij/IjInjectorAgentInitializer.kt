@@ -26,7 +26,6 @@ package org.jetbrains.projector.server.core.ij
 import org.jetbrains.projector.agent.init.IjArgs
 import org.jetbrains.projector.agent.init.toIjArgs
 import org.jetbrains.projector.util.agent.copyAgentToTempJarAndAttach
-import org.jetbrains.projector.util.loading.state.invokeWhenIdeaIsAtState
 
 @Suppress("unused") // Used in projector-server
 public object IjInjectorAgentInitializer {
@@ -35,19 +34,15 @@ public object IjInjectorAgentInitializer {
   internal const val MD_PANEL_CLASS_NAME = "org.jetbrains.projector.server.core.ij.md.ProjectorMarkdownPanel"
 
   @Suppress("unused") // Called from projector-server, don't trigger linter that doesn't know it
-  @OptIn(ExperimentalStdlibApi::class)
   public fun init(isAgent: Boolean) {
-    invokeWhenIdeaIsAtState("attach IJ injector agent") {
+    val args = mapOf(
+      IjArgs.IS_AGENT to isAgent,
+      IjArgs.MD_PANEL_CLASS to MD_PANEL_CLASS_NAME,
+    ).toIjArgs()
 
-      val args = mapOf(
-        IjArgs.IS_AGENT to isAgent,
-        IjArgs.MD_PANEL_CLASS to MD_PANEL_CLASS_NAME,
-      ).toIjArgs()
-
-      copyAgentToTempJarAndAttach(
-        agentJar = this::class.java.getResourceAsStream("/projector-agent/projector-agent-ij-injector.jar")!!,
-        args = args,
-      )
-    }
+    copyAgentToTempJarAndAttach(
+      agentJar = this::class.java.getResourceAsStream("/projector-agent/projector-agent-ij-injector.jar")!!,
+      args = args,
+    )
   }
 }

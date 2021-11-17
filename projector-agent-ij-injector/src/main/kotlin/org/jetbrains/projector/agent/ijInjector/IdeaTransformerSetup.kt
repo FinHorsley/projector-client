@@ -23,29 +23,12 @@
  */
 package org.jetbrains.projector.agent.ijInjector
 
-import com.intellij.openapi.editor.colors.impl.FontPreferencesImpl
-import javassist.CtClass
 import org.jetbrains.projector.agent.common.transformation.TransformerSetupBase
+import org.jetbrains.projector.util.loading.state.IdeaState
 
-internal object IjLigaturesDisablerTransformer : IdeaTransformerSetup<IjInjector.AgentParameters>() {
+internal abstract class IdeaTransformerSetup<P>() : TransformerSetupBase<P>() {
 
-  override fun getTransformations(): Map<Class<*>, (CtClass) -> ByteArray?> = mapOf(
-    FontPreferencesImpl::class.java to ::transformFontPrefs,
-  )
+  internal open val loadingState: IdeaState?
+    get() = IdeaState.CONFIGURATION_STORE_INITIALIZED
 
-  private fun transformFontPrefs(clazz: CtClass): ByteArray {
-
-    clazz
-      .getDeclaredMethod("useLigatures")
-      .setBody(
-        // language=java prefix="class FontPreferencesImpl { public boolean useLigatures()" suffix="}"
-        """
-          {
-            return false;
-          }
-        """.trimIndent()
-      )
-
-    return clazz.toBytecode()
-  }
 }
